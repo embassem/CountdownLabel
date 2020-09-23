@@ -256,11 +256,11 @@ class CountdownLabelExampleTests: XCTestCase {
         var completionChangedValue = 1
         label.setCountDownTime(minutes: 10)
         label.then(targetTime: 9) {
-            completionChangedValue += completionChangedValue
+            completionChangedValue += 1
         }
         label.then(targetTime: 8) {
-            completionChangedValue += completionChangedValue
-            completionChangedValue += completionChangedValue
+            completionChangedValue += 1
+            completionChangedValue += 1
         }
         label.start()
         
@@ -279,7 +279,7 @@ class CountdownLabelExampleTests: XCTestCase {
         label.setCountDownTime(minutes: 10)
         label.countdownAttributedText = CountdownAttributedText(text: "HELLO TIME IS HERE NOW",
             replacement: "HERE",
-            attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
         label.start()
         
         XCTAssertEqual(label.attributedText!.string, "HELLO TIME IS 00:00:10 NOW")
@@ -292,7 +292,7 @@ class CountdownLabelExampleTests: XCTestCase {
 
         label.countdownAttributedText = CountdownAttributedText(text: "HELLO TIME IS HERE NOW",
             replacement: "HERE",
-            attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
         label.start()
         
         
@@ -359,12 +359,7 @@ class CountdownLabelExampleTests: XCTestCase {
         XCTAssertEqual(label.morphingEnabled, false)
     }
     
-    func delay(delay: Double, closure: ()->()) {
-        dispatch_after(
-            dispatch_time(
-                dispatch_time_t(DISPATCH_TIME_NOW),
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
+    func delay(delay: Double, closure: @escaping ()->Void) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay, execute: closure)
     }
 }
