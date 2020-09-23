@@ -36,11 +36,11 @@ import UIKit
     case sparkle
     case burn
     case anvil
-    
+
     public static let allValues = [
         "Scale", "Evaporate", "Fall", "Pixelate", "Sparkle", "Burn", "Anvil"
     ]
-    
+
     public var description: String {
         switch self {
         case .evaporate:
