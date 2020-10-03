@@ -72,7 +72,7 @@ public class CountdownLabel: LTMorphingLabel {
             }
         }
     }
-    public var timeFormat = "HH:mm:ss"
+    public var timeFormat = "hh:mm:ss"
     public var thens = [TimeInterval: CountdownExecution]()
     public var countdownAttributedText: CountdownAttributedText! {
         didSet {
@@ -296,14 +296,20 @@ extension CountdownLabel {
     //fix one day bug
     func surplusTime(_ to1970Date: Date) -> String {
         let calendar = Calendar.init(identifier: .gregorian)
-        var labelText = timeFormat
+        var labelText = timeFormat.lowercased()
         let comp = calendar.dateComponents([.day, .hour, .minute, .second], from: date1970 as Date, to: to1970Date)
 
-        if let day = comp.day, let _ = timeFormat.range(of: "dd") {
-            labelText = labelText.replacingOccurrences(of: "dd", with: String.init(format: "%02ld", day))
+        var daysHours:Int = 0
+        if let day = comp.day {
+            if let _ = timeFormat.range(of: "dd") {
+                labelText = labelText.replacingOccurrences(of: "dd", with: String.init(format: "%02ld", day))
+            } else {
+                daysHours = day*24
+            }
         }
         if let hour = comp.hour, let _ = timeFormat.range(of: "hh") {
-            labelText = labelText.replacingOccurrences(of: "hh", with: String.init(format: "%02ld", hour))
+            let hoursWithDays = hour + daysHours
+            labelText = labelText.replacingOccurrences(of: "hh", with: String.init(format: "%02ld", hoursWithDays))
         }
         if let hour = comp.hour, let _ = timeFormat.range(of: "HH") {
             labelText = labelText.replacingOccurrences(of: "HH", with: String.init(format: "%02ld", hour))
